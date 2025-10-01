@@ -1,0 +1,38 @@
+From 57abf3dcf485ba7c5e992497b1a90812abce024a Mon Sep 17 00:00:00 2001
+From: clippy <clippy@localhost>
+Date: Sun, 20 Aug 2023 10:00:27 +0700
+Subject: [PATCH 2/3] Allow bar's output to be omitted
+
+---
+ src/bar.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/src/bar.c b/src/bar.c
+index bd63fe8..e299435 100644
+--- a/src/bar.c
++++ b/src/bar.c
+@@ -419,8 +419,7 @@ static void load_plugin(struct bar* this, struct map* config, char* plugin_name,
+ 
+ void bar_init(struct map* config, const char* bar_name, char* output_name, const char* config_location) {
+ 	if(output_name == NULL) {
+-		fprintf(stderr, "No output specified for %s\n", bar_name);
+-		return;
++		fprintf(stderr, "No output specified for %s, will try to use first available output.\n", bar_name);
+ 	}
+ 	struct bar* this = calloc(1, sizeof(struct bar));
+ 	wl_list_init(&this->outputs);
+@@ -454,6 +453,11 @@ void bar_init(struct map* config, const char* bar_name, char* output_name, const
+ 	wl_display_roundtrip(wl);
+ 
+ 	wl_list_for_each(node, &this->outputs, link) {
++		if(output_name == NULL) {
++			output_name = node->name;
++			this->output = node;
++			break;
++		}
+ 		if(strcmp(output_name, node->name) == 0) {
+ 			this->output = node;
+ 		}
+-- 
+2.49.0
+

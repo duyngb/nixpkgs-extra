@@ -1,0 +1,38 @@
+From a11629c99bbbd3f39a123c2cb744ba7d37c3a2fb Mon Sep 17 00:00:00 2001
+From: clippy <clippy@localhost>
+Date: Sun, 17 Dec 2023 20:57:21 +0700
+Subject: [PATCH 3/3] fix: Crash on bad MPRIS message
+
+---
+ plugins/mpris.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/plugins/mpris.c b/plugins/mpris.c
+index 2268197..0d6d03a 100644
+--- a/plugins/mpris.c
++++ b/plugins/mpris.c
+@@ -98,11 +98,18 @@ static void dbus_signal(GDBusProxy* proxy, gchar* sender, gchar* signal, GVarian
+ 		g_variant_dict_init(&dict, metadata);
+ 
+ 		GVariant* value = g_variant_dict_lookup_value(&dict, "xesam:title", G_VARIANT_TYPE_STRING);
+-		const char* title = g_variant_get_string(value, NULL);
++		const char *title;
++		if (value)
++			title = g_variant_get_string(value, NULL);
++		else
++			title = "";
+ 
+ 		value = g_variant_dict_lookup_value(&dict, "xesam:artist", G_VARIANT_TYPE_ARRAY);
+-		value = g_variant_get_child_value(value, 0);
+-		const char* artist = g_variant_get_string(value, NULL);
++		const char *artist = NULL;
++		if (value && (value = g_variant_get_child_value(value, 0)))
++			artist = g_variant_get_string(value, NULL);
++		if (!artist)
++			artist = "";
+ 
+ 		char ret[this->length];
+ 		snprintf(ret, this->length, this->format, title, artist);
+-- 
+2.49.0
+
