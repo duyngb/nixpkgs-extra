@@ -1,0 +1,15 @@
+name: jujutsu
+
+on:
+  push:
+    paths:
+      - pkgs/jujutsu.nix
+      - flake.lock
+
+jobs:
+  jujutsu:
+    uses: ./.github/workflows/build-nix.yaml
+    with:
+      build_target: ".#jujutsu"
+    secrets:
+      cachix_auth_token: "${{ secrets.CACHIX_AUTH_TOKEN }}"

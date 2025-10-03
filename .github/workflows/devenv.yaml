@@ -1,0 +1,15 @@
+name: devenv
+
+on:
+  push:
+    paths:
+      - pkgs/devenv.nix
+      - flake.lock
+
+jobs:
+  devenv:
+    uses: ./.github/workflows/build-nix.yaml
+    with:
+      build_target: ".#devenv"
+    secrets:
+      cachix_auth_token: "${{ secrets.CACHIX_AUTH_TOKEN }}"

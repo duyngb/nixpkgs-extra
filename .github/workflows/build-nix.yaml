@@ -1,0 +1,39 @@
+name: build-nix
+
+on:
+  workflow_call:
+    inputs:
+      free_disk_space:
+        required: false
+        default: false
+        type: boolean
+      build_target:
+        required: true
+        type: string
+    secrets:
+      cachix_auth_token:
+        required: true
+
+jobs:
+  build-nix:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Free Disk Space (Ubuntu)
+      uses: jlumbroso/free-disk-space@v1.3.1
+      if: '${{ inputs.free_disk_space }}'
+    - name: Checkout
+      uses: actions/checkout@v5
+    - name: Install nix
+      uses: cachix/install-nix-action@v31
+      with:
+        nix_path: nixpkgs=channel:nixos-25.05
+        extra_nix_config: |
+          cores = 1
+          max-jobs = 1
+    - name: Enable cachix
+      uses: cachix/cachix-action@v16
+      with:
+        name: duyngb
+        authToken: '${{ secrets.cachix_auth_token }}'
+    - name: Build nix package
+      run: 'nix build -L "${{ inputs.build_target }}"'

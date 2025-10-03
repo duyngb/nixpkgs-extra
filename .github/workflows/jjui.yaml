@@ -1,0 +1,15 @@
+name: jjui
+
+on:
+  push:
+    paths:
+      - pkgs/jjui.nix
+      - flake.lock
+
+jobs:
+  jjui:
+    uses: ./.github/workflows/build-nix.yaml
+    with:
+      build_target: ".#jjui"
+    secrets:
+      cachix_auth_token: "${{ secrets.CACHIX_AUTH_TOKEN }}"
