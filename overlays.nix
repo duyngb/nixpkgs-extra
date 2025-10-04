@@ -8,21 +8,7 @@ let
       directory = ./pkgs;
     });
 
-  devpack-rust =
-    final: prev:
-    let
-      pkgs' = import inputs.nixpkgs {
-        inherit (prev) system;
-        overlays = [ inputs.rust-overlay.overlays.default ];
-      };
-    in
-    {
-      inherit (pkgs') makeRustPlatform rust-bin;
-      rustPlatform = pkgs'.makeRustPlatform {
-        cargo = pkgs'.rust-bin.stable.latest.default;
-        rustc = pkgs'.rust-bin.stable.latest.default;
-      };
-    };
+  devpack-rust = inputs.rust-overlay.overlays.default;
 
   devpack-zig =
     final: prev:

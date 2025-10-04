@@ -22,7 +22,7 @@ basepkg.overrideAttrs {
     owner = "idursun";
     repo = "jjui";
     tag = "v${version}";
-    hash = "sha256-UkgQ3uxWPwLQiNhcZReFifLPD8h+xmH798ckTtia/+4=";
+    hash = "${srcHash}";
   };
 
   # backport from nixpkgs-unstable

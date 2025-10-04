@@ -12,18 +12,12 @@
   glibcLocalesUtf8,
   devenv, # required to run version test
 
-  makeRustPlatform,
-  rust-bin,
+  rustPlatform,
 }:
 
 let
   version = "1.9";
   devenvNixVersion = "2.30.4";
-
-  rustPlatform = makeRustPlatform {
-    cargo = rust-bin.stable.latest.default;
-    rustc = rust-bin.stable.latest.default;
-  };
 
   devenv_nix =
     (nixVersions.git.overrideSource (fetchFromGitHub {
@@ -41,6 +35,7 @@ let
         __intentionallyOverridingVersion = true;
       });
 in
+
 rustPlatform.buildRustPackage {
   pname = "devenv";
   inherit version;

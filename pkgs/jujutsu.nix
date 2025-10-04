@@ -15,24 +15,27 @@
 }:
 
 let
+  version = "0.34.0";
+  srcHash = "sha256-OW8kSDBBSZr0G3U27AAkZ3cH3TJmSARbg9Pc4qZ6tA0=";
+  cargoHash = "sha256-/zC2z0evYs8VKta0uClTtl4l3tbDRcsVedGF2jtfQGA=";
+
+  rust-bin-default = rust-bin.stable.latest.default;
   rustPlatform = makeRustPlatform {
-    cargo = rust-bin.stable.latest.default;
-    rustc = rust-bin.stable.latest.default;
+    cargo = rust-bin-default;
+    rustc = rust-bin-default;
   };
 in
 
 rustPlatform.buildRustPackage (finalAttrs: {
+  inherit version cargoHash;
   pname = "jujutsu";
-  version = "0.34.0";
 
   src = fetchFromGitHub {
     owner = "jj-vcs";
     repo = "jj";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-OW8kSDBBSZr0G3U27AAkZ3cH3TJmSARbg9Pc4qZ6tA0=";
+    tag = "v${version}";
+    hash = "${srcHash}";
   };
-
-  cargoHash = "sha256-/zC2z0evYs8VKta0uClTtl4l3tbDRcsVedGF2jtfQGA=";
 
   nativeBuildInputs = [
     installShellFiles
