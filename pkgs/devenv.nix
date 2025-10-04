@@ -12,7 +12,8 @@
   glibcLocalesUtf8,
   devenv, # required to run version test
 
-  rustPlatform,
+  makeRustPlatform,
+  rust-bin,
 }:
 
 let
@@ -34,6 +35,12 @@ let
         # do override src, but the Nix way so the warning is unaware of it
         __intentionallyOverridingVersion = true;
       });
+
+  rust-bin-default = rust-bin.stable.latest.default;
+  rustPlatform = makeRustPlatform {
+    cargo = rust-bin-default;
+    rustc = rust-bin-default;
+  };
 in
 
 rustPlatform.buildRustPackage {
