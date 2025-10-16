@@ -10,9 +10,9 @@ let
   super = inputs.nixpkgs.legacyPackages.${system};
   basepkg = super.jjui;
 
-  version = "0.9.3";
-  srcHash = "sha256-UkgQ3uxWPwLQiNhcZReFifLPD8h+xmH798ckTtia/+4=";
-  vendorHash = "sha256-VfzvGzh/ZYHI5LDuhwOwb4nEOVesBu0kxRF6Q/ISPww=";
+  version = "0.9.4";
+  srcHash = "sha256-gKJ03+H/UTmGCGV5mpthrcHw+oX4vubuiVKbvmYNk1I=";
+  vendorHash = "sha256-YBRHpHBb3uzgXhwxVu3493CtPyG9Vzm8IPc1VW6/CKU=";
 in
 
 basepkg.overrideAttrs {
