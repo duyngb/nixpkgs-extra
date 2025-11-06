@@ -1,0 +1,4 @@
+{ ... }:
+{
+  devcontainer.enable = true;
+}
