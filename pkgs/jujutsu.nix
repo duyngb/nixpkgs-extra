@@ -15,9 +15,9 @@
 }:
 
 let
-  version = "0.34.0";
-  srcHash = "sha256-OW8kSDBBSZr0G3U27AAkZ3cH3TJmSARbg9Pc4qZ6tA0=";
-  cargoHash = "sha256-/zC2z0evYs8VKta0uClTtl4l3tbDRcsVedGF2jtfQGA=";
+  version = "0.35.0";
+  srcHash = "sha256-YUrjP2tzABdy4eAV1hPmgYWU8ChcJ5B4IlmQUGm95ro=";
+  cargoHash = "sha256-9VCAmtY029+CFNFcYLdA/VyT5CIvJnuA3iwPOKZpYV0=";
 
   rust-bin-default = rust-bin.stable.latest.default;
   rustPlatform = makeRustPlatform {
