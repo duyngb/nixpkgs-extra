@@ -42,6 +42,8 @@
         }
       );
 
+      legacyPackages = forAllSystems (system: self.packages.${system});
+
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
     };
 
