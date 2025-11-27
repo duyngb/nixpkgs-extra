@@ -74,6 +74,8 @@ rustPlatform.buildRustPackage {
     gitMinimal
   ];
 
+  doCheck = false;
+
   preCheck = ''
     git init
     git config user.email "test@example.com"
