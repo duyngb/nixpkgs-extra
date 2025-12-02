@@ -1,12 +1,13 @@
 {
   inputs,
-  system,
+  stdenv,
   fetchFromGitHub,
 
   versionCheckHook,
 }:
 
 let
+  system = stdenv.hostPlatform.system;
   super = inputs.nixpkgs.legacyPackages.${system};
   basepkg = super.jjui;
 
