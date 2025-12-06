@@ -1,19 +1,18 @@
-name: jjui
+name: otel-tui
 
 on:
   push:
     branches:
       # Local policy requires staging checks before pushing to main.
-      # We also don't run jobs on main.
       - pkg-staging
     paths:
-      - pkgs/jjui.nix
+      - pkgs/otel-tui.nix
       - flake.lock
 
 jobs:
-  jjui:
+  otel-tui:
     uses: ./.github/workflows/build-nix.yaml
     with:
-      build_target: ".#jjui"
+      build_target: ".#otel-tui"
     secrets:
       cachix_auth_token: "${{ secrets.CACHIX_AUTH_TOKEN }}"

@@ -4,7 +4,6 @@ on:
   push:
     branches:
       # Local policy requires staging checks before pushing to main.
-      # We also don't run jobs on main.
       - pkg-staging
     paths:
       - pkgs/jujutsu.nix

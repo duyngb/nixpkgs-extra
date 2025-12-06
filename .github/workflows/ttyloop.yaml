@@ -1,19 +1,18 @@
-name: devenv
+name: ttyloop
 
 on:
   push:
     branches:
       # Local policy requires staging checks before pushing to main.
-      # We also don't run jobs on main.
       - pkg-staging
     paths:
-      - pkgs/devenv.nix
+      - pkgs/ttyloop.nix
       - flake.lock
 
 jobs:
-  devenv:
+  ttyloop:
     uses: ./.github/workflows/build-nix.yaml
     with:
-      build_target: ".#devenv"
+      build_target: ".#ttyloop"
     secrets:
       cachix_auth_token: "${{ secrets.CACHIX_AUTH_TOKEN }}"

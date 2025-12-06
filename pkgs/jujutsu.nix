@@ -10,20 +10,13 @@
   nix-update-script,
   versionCheckHook,
 
-  makeRustPlatform,
-  rust-bin,
+  rustPlatform,
 }:
 
 let
   version = "0.36.0";
   srcHash = "sha256-HGMzNXm6vWKf/RHPwB/soDqxAvCOW1J6BPs0tsrEuTI=";
   cargoHash = "sha256-jai0FNuCUcgN+ZmmYgbFrMK1Z1vcv21wALkEb74h7H0=";
-
-  rust-bin-default = rust-bin.stable.latest.default;
-  rustPlatform = makeRustPlatform {
-    cargo = rust-bin-default;
-    rustc = rust-bin-default;
-  };
 in
 
 rustPlatform.buildRustPackage (finalAttrs: {

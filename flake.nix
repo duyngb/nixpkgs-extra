@@ -4,17 +4,10 @@
       self,
       nixpkgs,
       rust-overlay,
-      zig-overlay,
-      zls-src,
       ...
     }:
-    let
-      lib = nixpkgs.lib.extend (
-        self: super: {
-          relativeToRoot = nixpkgs.lib.path.append ./.;
-        }
-      );
 
+    let
       forAllSystems = nixpkgs.lib.genAttrs [
         "x86_64-linux"
       ];
@@ -32,13 +25,17 @@
             inherit system;
             overlays = [ self.overlays.default ];
           };
+
+          pkgs' = pkgs // {
+            rustPlatform = pkgs.makeRustPlatform {
+              cargo = pkgs.rust-bin.stable.latest.default;
+              rustc = pkgs.rust-bin.stable.latest.default;
+            };
+          };
         in
         nixpkgs.lib.packagesFromDirectoryRecursive {
-          callPackage = nixpkgs.lib.callPackageWith pkgs;
+          callPackage = nixpkgs.lib.callPackageWith pkgs';
           directory = ./pkgs;
-        }
-        // {
-          inherit (pkgs) neovide;
         }
       );
 
@@ -53,17 +50,6 @@
     rust-overlay = {
       url = "github:oxalica/rust-overlay/stable";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    zig-overlay = {
-      url = "github:mitchellh/zig-overlay?ref=b5f76ad0830c1e11e2e3c5a39792a663e645d57b";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    zls-src = {
-      url = "github:zigtools/zls/0.15.0";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.zig-overlay.follows = "zig-overlay";
     };
   };
 }

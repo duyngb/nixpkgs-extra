@@ -5,20 +5,13 @@
   pkg-config,
   ncurses,
 
-  makeRustPlatform,
-  rust-bin,
+  rustPlatform,
 }:
 
 let
   version = "0.0.0-dev20241005";
   srcHash = "sha256-fgAwEtJqnKkBHy06HnEkUCO0/RwCaNXuLeAajf/Mo7M=";
   cargoHash = "sha256-cbDGG9otKT+Gxra0RGGJ578u9mMJk+jV0dyO2+d7j2w=";
-
-  rust-bin-default = rust-bin.stable.latest.default;
-  rustPlatform = makeRustPlatform {
-    cargo = rust-bin-default;
-    rustc = rust-bin-default;
-  };
 in
 
 rustPlatform.buildRustPackage {
