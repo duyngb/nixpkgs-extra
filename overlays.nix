@@ -24,6 +24,7 @@ in
 
     {
       inherit inputs;
+      stable = prev;
     }
 
     // (additions final prev)
