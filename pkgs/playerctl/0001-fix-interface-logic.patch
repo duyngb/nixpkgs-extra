@@ -1,0 +1,60 @@
+--- playerctl-2.4.1-a/playerctl/playerctl-daemon.c	2021-09-21 12:23:38.000000000 +0000
++++ playerctl-2.4.1-b/playerctl/playerctl-daemon.c	2025-01-01 00:00:00.000000000 +0000
+@@ -124,24 +124,20 @@
+         interface = PLAYER;
+         g_variant_dict_init(&cached_properties, player->player_properties);
+     } else if (g_strcmp0(interface_name, TRACKLIST_INTERFACE) == 0) {
+         interface = TRACKLIST;
+         // FIXME: new value of Tracks property is not sent in PropertiesChanged signal
+         // We may want to listen for TrackAdded, TrackRemoved and TrackListReplaced
+-        if (!player->playlists.supported) {
+-            g_warning("Player %s doesn't appear to support interface %s, but sent "
+-                      "PropertiesChanged regarding its properties.",
+-                      player->well_known, interface_name);
++        if (!player->tracklist.supported) {
++            player->tracklist.supported = TRUE;
+         }
+         g_variant_dict_init(&cached_properties, player->tracklist.properties);
+     } else if (g_strcmp0(interface_name, PLAYLISTS_INTERFACE) == 0) {
+         interface = PLAYLISTS;
+         if (!player->playlists.supported) {
+-            g_warning("Player %s doesn't appear to support interface %s, but sent "
+-                      "PropertiesChanged regarding its properties.",
+-                      player->well_known, interface_name);
++            player->playlists.supported = TRUE;
+         }
+         g_variant_dict_init(&cached_properties, player->playlists.properties);
+     } else if (g_strcmp0(interface_name, ROOT_INTERFACE) == 0) {
+         interface = ROOT;
+         g_variant_dict_init(&cached_properties, player->root_properties);
+     } else {
+@@ -1469,13 +1465,13 @@
+                                                 PROPERTIES_INTERFACE, "GetAll",
+                                                 g_variant_new("(s)", TRACKLIST_INTERFACE), NULL,
+                                                 G_DBUS_CALL_FLAGS_NO_AUTO_START, -1, NULL, &error);
+             if (error != NULL) {
+                 // This interface is optional, so we can keep the player around
+                 player->tracklist.supported = false;
+-                g_warning("could not get tracklist properties for player: %s", player->well_known);
++                g_debug("could not get tracklist properties for player: %s", player->well_known);
+                 g_clear_error(&error);
+             } else {
+                 properties = g_variant_get_child_value(reply, 0);
+                 player_update_properties(player, TRACKLIST_INTERFACE, properties);
+                 g_variant_unref(properties);
+                 g_variant_unref(reply);
+@@ -1487,13 +1483,13 @@
+                                                 PROPERTIES_INTERFACE, "GetAll",
+                                                 g_variant_new("(s)", PLAYLISTS_INTERFACE), NULL,
+                                                 G_DBUS_CALL_FLAGS_NO_AUTO_START, -1, NULL, &error);
+             if (error != NULL) {
+                 // This interface is optional, so we can keep the player around
+                 player->playlists.supported = false;
+-                g_warning("could not get playlists properties for player: %s", player->well_known);
++                g_debug("could not get playlists properties for player: %s", player->well_known);
+                 g_clear_error(&error);
+             } else {
+                 properties = g_variant_get_child_value(reply, 0);
+                 player_update_properties(player, PLAYLISTS_INTERFACE, properties);
+                 g_variant_unref(properties);
+                 g_variant_unref(reply);
