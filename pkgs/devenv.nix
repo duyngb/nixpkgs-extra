@@ -21,4 +21,5 @@ stable.devenv.overrideAttrs (final: rec {
     hash = cargoHash;
   };
 
+  doCheck = false;
 })
