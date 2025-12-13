@@ -10,7 +10,7 @@ on:
       - flake.lock
 
 jobs:
-  jujutsu:
+  devenv:
     uses: ./.github/workflows/build-nix.yaml
     with:
       build_target: ".#devenv"
