@@ -4,7 +4,7 @@
   stable,
 }:
 
-stable.devenv.overrideAttrs (final: rec {
+(stable.devenv.override { inherit rustPlatform; }).overrideAttrs (final: rec {
   version = "1.11.2";
 
   src = fetchFromGitHub {
