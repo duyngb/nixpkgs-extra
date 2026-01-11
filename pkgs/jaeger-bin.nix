@@ -14,16 +14,15 @@ let
   arch = goArch.${stdenv.hostPlatform.system} or throwNoSystem;
 
   pname = "jaeger-bin";
-  version = "2.13.0";
-  tag = "v1.76.0";
+  version = "2.14.1";
 
 in
 stdenv.mkDerivation {
   inherit pname version;
 
   src = fetchurl {
-    url = "https://github.com/jaegertracing/jaeger/releases/download/${tag}/jaeger-${version}-linux-${arch}.tar.gz";
-    hash = "sha256-fGKLXd3ntUObK2SA+z8xkxCyFTWSMRFR5MLi1F9t7RM=";
+    url = "https://github.com/jaegertracing/jaeger/releases/download/v${version}/jaeger-${version}-linux-${arch}.tar.gz";
+    hash = "sha256-sUcCjOuECvT0imtxQi2vOM/BaKtSRFc/fyQpeHD7Irc=";
   };
 
   installPhase = ''
