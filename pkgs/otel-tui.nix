@@ -13,13 +13,13 @@ buildGoModule (finalAttrs: {
   };
 
   pname = "otel-tui";
-  version = "0.6.2";
+  version = "0.6.3";
 
   src = fetchFromGitHub {
     owner = "ymtdzzz";
     repo = "otel-tui";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-uR2E7I+aX7f+efwMTqWBRL3JYvlqnoHPCXZ61MDq+uQ=";
+    hash = "sha256-V12mnV4CqHg7tM6ypG5NctTSFDu+jz0sC7p1v8Ax47A=";
   };
 
   ldFlags = [
@@ -42,7 +42,7 @@ buildGoModule (finalAttrs: {
   #
   # This vendor hash was obtained with GOWORK=off
   #
-  vendorHash = "sha256-ruU6t7fZrB+sap9VKPTO/qhgEORQ3R8pddW04j4vcik=";
+  vendorHash = "sha256-zUx47lOT2Rb+EaGHGI7TNH7YUovt00mRtLntjsVtrnQ=";
   env.GOWORK = "off";
   # ---------------------------------------------------------------------------
 })
