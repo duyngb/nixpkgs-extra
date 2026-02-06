@@ -1,13 +1,68 @@
 {
   lib,
-  stable,
+  stdenvNoCC,
   fetchurl,
+  nodejs,
+  ripgrep,
+  writableTmpDirAsHomeHook,
+  versionCheckHook,
+  nix-update-script,
 }:
+stdenvNoCC.mkDerivation (finalAttrs: rec {
+  pname = "gemini-cli-bin";
+  version = "0.28.2";
 
-stable.gemini-cli-bin.overrideAttrs (final: rec {
-  version = "0.23.0";
   src = fetchurl {
     url = "https://github.com/google-gemini/gemini-cli/releases/download/v${version}/gemini.js";
-    hash = "sha256-9ZWdPHOCVpxZLM2c5tNQDFDs8RRlj5duUBAVRYRjg+E=";
+    hash = "sha256-QrYpxMVm0LW42bL6yQn2TuBdyII4hVO2zlesMPiI0DQ=";
+  };
+
+  dontUnpack = true;
+  strictDeps = true;
+
+  nativeBuildInputs = [
+    nodejs
+    ripgrep
+  ];
+
+  buildInputs = [
+    nodejs
+    ripgrep
+  ];
+
+  installPhase = ''
+    runHook preInstall
+
+    install -D "$src" "$out/bin/gemini"
+    sed -i '/disableautoupdate: {/,/}/ s/default: false/default: true/' "$out/bin/gemini"
+
+    # use `ripgrep` from `nixpkgs`, more dependencies but prevent downloading incompatible binary on NixOS
+    # this workaround can be removed once the following upstream issue is resolved:
+    # https://github.com/google-gemini/gemini-cli/issues/11438
+    substituteInPlace $out/bin/gemini \
+      --replace-fail 'const existingPath = await resolveExistingRgPath();' 'const existingPath = "${lib.getExe ripgrep}";'
+
+    runHook postInstall
+  '';
+
+  doInstallCheck = true;
+  nativeInstallCheckInputs = [
+    writableTmpDirAsHomeHook
+  ];
+  versionCheckProgramArg = "-v";
+
+  passthru.updateScript = nix-update-script {
+    # Ignore `preview` and `nightly` tags
+    extraArgs = [ "--version-regex=^v([0-9.]+)$" ];
+  };
+
+  meta = {
+    description = "AI agent that brings the power of Gemini directly into your terminal";
+    homepage = "https://github.com/google-gemini/gemini-cli";
+    license = lib.licenses.asl20;
+    mainProgram = "gemini";
+    platforms = lib.platforms.linux;
+    sourceProvenance = [ lib.sourceTypes.binaryBytecode ];
+    priority = 10;
   };
 })
