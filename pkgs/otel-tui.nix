@@ -13,14 +13,16 @@ buildGoModule (finalAttrs: {
   };
 
   pname = "otel-tui";
-  version = "0.6.3";
+  version = "0.7.1";
 
   src = fetchFromGitHub {
     owner = "ymtdzzz";
     repo = "otel-tui";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-V12mnV4CqHg7tM6ypG5NctTSFDu+jz0sC7p1v8Ax47A=";
+    hash = "sha256-+OvbBmFGyS5tpFtgn1DDxWp+LD5BAl9ojSIDGokfcRk=";
   };
+
+  vendorHash = "sha256-7/D9FUMiCb/I3WFGiJKNsl4lUvr96+yvZ+MxzDw6Quw=";
 
   ldFlags = [
     "-X main.version=${finalAttrs.version}"
@@ -30,19 +32,13 @@ buildGoModule (finalAttrs: {
   doInstallCheck = false;
   env.CGO_ENABLED = "0";
 
-  # ---------------------------------------------------------------------------
-  # BUGGY ZONE: buildGoModule does not handle workspace well
-  #   ref: https://github.com/NixOS/nixpkgs/issues/203039
-  #   ref: https://github.com/NixOS/nixpkgs/issues/299096
-  #
-  # Need to set subPackages, or the build will failed with module not found
-  # error; found by repo's nix expression.
-  #
   subPackages = [ "." ];
-  #
-  # This vendor hash was obtained with GOWORK=off
-  #
-  vendorHash = "sha256-zUx47lOT2Rb+EaGHGI7TNH7YUovt00mRtLntjsVtrnQ=";
-  env.GOWORK = "off";
-  # ---------------------------------------------------------------------------
+
+  overrideModAttrs = (
+    _: {
+      buildPhase = ''
+        go work vendor
+      '';
+    }
+  );
 })
