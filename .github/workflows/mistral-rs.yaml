@@ -1,0 +1,19 @@
+name: mistral-rs
+
+on:
+  push:
+    branches:
+      # Local policy requires staging checks before pushing to main.
+      - pkg-staging
+    paths:
+      - pkgs/mistral-rs/package.nix
+      - pkgs/mistral-rs/no-native-cpu.patch
+      - flake.lock
+
+jobs:
+  mistral-rs:
+    uses: ./.github/workflows/build-nix.yaml
+    with:
+      build_target: ".#mistral-rs"
+    secrets:
+      cachix_auth_token: "${{ secrets.CACHIX_AUTH_TOKEN }}"
