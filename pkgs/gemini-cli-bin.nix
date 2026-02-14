@@ -2,7 +2,7 @@
   lib,
   stdenvNoCC,
   fetchurl,
-  nodejs,
+  nodejs_20,
   ripgrep,
   writableTmpDirAsHomeHook,
   versionCheckHook,
@@ -21,12 +21,12 @@ stdenvNoCC.mkDerivation (finalAttrs: rec {
   strictDeps = true;
 
   nativeBuildInputs = [
-    nodejs
+    nodejs_20
     ripgrep
   ];
 
   buildInputs = [
-    nodejs
+    nodejs_20
     ripgrep
   ];
 
