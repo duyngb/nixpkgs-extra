@@ -16,6 +16,7 @@ on:
 
 concurrency:
   group: build-nix-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build-nix:
