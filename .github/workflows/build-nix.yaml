@@ -14,10 +14,6 @@ on:
       cachix_auth_token:
         required: true
 
-concurrency:
-  group: build-nix-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
   build-nix:
     runs-on: ubuntu-latest
