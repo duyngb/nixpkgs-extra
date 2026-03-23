@@ -14,7 +14,7 @@ let
   arch = goArch.${stdenv.hostPlatform.system} or throwNoSystem;
 
   pname = "jaeger-bin";
-  version = "2.14.1";
+  version = "2.16.0";
 
 in
 stdenv.mkDerivation {
@@ -22,7 +22,7 @@ stdenv.mkDerivation {
 
   src = fetchurl {
     url = "https://github.com/jaegertracing/jaeger/releases/download/v${version}/jaeger-${version}-linux-${arch}.tar.gz";
-    hash = "sha256-sUcCjOuECvT0imtxQi2vOM/BaKtSRFc/fyQpeHD7Irc=";
+    hash = "sha256-JTzfWvdAXwYiC52sFOZtRhPy4xwBj6q5TlJ8q70CCo8=";
   };
 
   installPhase = ''
