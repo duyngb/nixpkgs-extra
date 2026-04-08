@@ -4,7 +4,7 @@
   stable,
 }:
 
-(stable.jujutsu.override { inherit rustPlatform; }).overrideAttrs (final: rec {
+stable.jujutsu.overrideAttrs (final: rec {
   version = "0.40.0";
 
   src = fetchFromGitHub {

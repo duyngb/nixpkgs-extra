@@ -25,16 +25,9 @@
             inherit system;
             overlays = [ self.overlays.default ];
           };
-
-          pkgs' = pkgs // {
-            rustPlatform = pkgs.makeRustPlatform {
-              cargo = pkgs.rust-bin.stable.latest.default;
-              rustc = pkgs.rust-bin.stable.latest.default;
-            };
-          };
         in
         nixpkgs.lib.packagesFromDirectoryRecursive {
-          callPackage = nixpkgs.lib.callPackageWith pkgs';
+          callPackage = nixpkgs.lib.callPackageWith pkgs;
           directory = ./pkgs;
         }
       );

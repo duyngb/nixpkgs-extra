@@ -5,7 +5,7 @@ let
     final: prev:
     let
       final' = final // {
-        rustPlatform = final.makeRustPlatform {
+        rustPlatform-stable = final.makeRustPlatform {
           cargo = final.rust-bin.stable.latest.default;
           rustc = final.rust-bin.stable.latest.default;
         };
