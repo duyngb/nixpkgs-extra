@@ -3,7 +3,6 @@
     inputs@{
       self,
       nixpkgs,
-      rust-overlay,
       ...
     }:
 
@@ -39,10 +38,5 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay/stable";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 }
