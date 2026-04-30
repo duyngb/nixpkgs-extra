@@ -6,11 +6,11 @@
 
 stdenv.mkDerivation (final: {
   pname = "trailbase-bin";
-  version = "0.26.3";
+  version = "0.26.8";
 
   src = fetchzip {
     url = "https://github.com/trailbaseio/trailbase/releases/download/v${final.version}/trailbase_v${final.version}_x86_64_linux.zip";
-    hash = "sha256-7pm6jmwj/SMCoukAFl9VwoXRvbwm74Nj1eAgRI9ujHE=";
+    hash = "sha256-jUIgstd51MyxTibIF4jQd4uv/drw8931yJWiqFGuvCM=";
     stripRoot = false;
   };
 
@@ -25,5 +25,3 @@ stdenv.mkDerivation (final: {
     mainProgram = "trail";
   };
 })
-
-
