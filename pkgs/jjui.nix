@@ -4,14 +4,14 @@
 }:
 
 stable.jjui.overrideAttrs (finalAttrs: rec {
-  version = "0.10.4";
+  version = "0.10.5";
   src = fetchFromGitHub {
     owner = "idursun";
     repo = "jjui";
     tag = "v${version}";
-    hash = "sha256-20NWoojFBwHs33NFNeZbk1kiZ418kYD42XTUOHuQtv8=";
+    hash = "sha256-3cr6aSJoIAv9Ine2ePHCC6xBaS1G4i23yQh8I5mq47g=";
   };
-  vendorHash = "sha256-AJlJ9iHkkWNS8a4oGt8AG89StjMH9UH3WuOcZwa3VS8=";
+  vendorHash = "sha256-iUWeQIYwOkXhRFsQc5zBjFFG5m412ysR5LsZsHET1ak=";
 
   doCheck = false;
 })
