@@ -13,16 +13,16 @@ buildGoModule (finalAttrs: {
   };
 
   pname = "otel-tui";
-  version = "0.7.1";
+  version = "0.7.3";
 
   src = fetchFromGitHub {
     owner = "ymtdzzz";
     repo = "otel-tui";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-+OvbBmFGyS5tpFtgn1DDxWp+LD5BAl9ojSIDGokfcRk=";
+    hash = "sha256-RYGSMdJQ2qj6930PX/UWFrN2orQzRpufHiKDv6lmAw4=";
   };
 
-  vendorHash = "sha256-7/D9FUMiCb/I3WFGiJKNsl4lUvr96+yvZ+MxzDw6Quw=";
+  vendorHash = "sha256-MRDbVmEjli2QgnxnCryjhYYQs4xNyUMC0ql9N36PkYo=";
 
   ldFlags = [
     "-X main.version=${finalAttrs.version}"
