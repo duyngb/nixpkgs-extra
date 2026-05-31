@@ -1,7 +1,7 @@
-From a11629c99bbbd3f39a123c2cb744ba7d37c3a2fb Mon Sep 17 00:00:00 2001
+From e6a20b62ba7dcb90262e921fb8f389d052cfc247 Mon Sep 17 00:00:00 2001
 From: clippy <clippy@localhost>
 Date: Sun, 17 Dec 2023 20:57:21 +0700
-Subject: [PATCH 3/3] fix: Crash on bad MPRIS message
+Subject: [PATCH 3/4] Fix crash on bad MPRIS messages
 
 ---
  plugins/mpris.c | 13 ++++++++++---
@@ -34,5 +34,5 @@ index 2268197..0d6d03a 100644
  		char ret[this->length];
  		snprintf(ret, this->length, this->format, title, artist);
 -- 
-2.49.0
+2.51.2
 

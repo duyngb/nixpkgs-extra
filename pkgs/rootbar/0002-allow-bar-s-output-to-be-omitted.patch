@@ -1,7 +1,7 @@
 From 57abf3dcf485ba7c5e992497b1a90812abce024a Mon Sep 17 00:00:00 2001
 From: clippy <clippy@localhost>
 Date: Sun, 20 Aug 2023 10:00:27 +0700
-Subject: [PATCH 2/3] Allow bar's output to be omitted
+Subject: [PATCH 2/4] Allow bar's output to be omitted
 
 ---
  src/bar.c | 8 ++++++--
@@ -34,5 +34,5 @@ index bd63fe8..e299435 100644
  			this->output = node;
  		}
 -- 
-2.49.0
+2.51.2
 

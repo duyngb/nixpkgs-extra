@@ -1,0 +1,78 @@
+From f2812c1f00cc635289371ba2e09cd2894a8e41b7 Mon Sep 17 00:00:00 2001
+From: duyngb <sau.nguyen@outlook.com>
+Date: Sun, 31 May 2026 09:00:35 +0700
+Subject: [PATCH 4/4] Fix function prototypes
+
+---
+ inc/map.h |  2 +-
+ src/bar.c | 20 ++++++++++++++------
+ 2 files changed, 15 insertions(+), 7 deletions(-)
+
+diff --git a/inc/map.h b/inc/map.h
+index 21bda8c..b054334 100644
+--- a/inc/map.h
++++ b/inc/map.h
+@@ -27,7 +27,7 @@ struct map* map_init();
+ 
+ struct map* map_init_void();
+ 
+-void map_free();
++void map_free(struct map* map);
+ 
+ bool map_put(struct map* map, const char* key, char* value);
+ 
+diff --git a/src/bar.c b/src/bar.c
+index e299435..3dd9866 100644
+--- a/src/bar.c
++++ b/src/bar.c
+@@ -63,7 +63,15 @@ struct bar {
+ 	int32_t top_margin, right_margin, left_margin, bottom_margin;
+ };
+ 
+-static void nop() {}
++static void nop_remove(void*, struct wl_registry*, uint32_t) {}
++
++static void nop_xdg_listener_description(void*, struct zxdg_output_v1*, const char*) {}
++
++static void nop_xdg_listener_done(void*, struct zxdg_output_v1*) {}
++
++static void nop_xdg_listener_logical_position(void*, struct zxdg_output_v1*, int32_t, int32_t) {}
++
++static void nop_surface_listener_closed(void*, struct zwlr_layer_surface_v1*) {}
+ 
+ static void add_interface(void* data, struct wl_registry* registry, uint32_t name, const char* interface, uint32_t version) {
+ 	struct bar* this = data;
+@@ -434,7 +442,7 @@ void bar_init(struct map* config, const char* bar_name, char* output_name, const
+ 	struct wl_registry* registry = wl_display_get_registry(wl);
+ 	struct wl_registry_listener reg_listener = {
+ 		.global = add_interface,
+-		.global_remove = nop
++		.global_remove = nop_remove,
+ 	};
+ 	wl_registry_add_listener(registry, &reg_listener, this);
+ 	wl_display_roundtrip(wl);
+@@ -443,9 +451,9 @@ void bar_init(struct map* config, const char* bar_name, char* output_name, const
+ 	wl_list_for_each(node, &this->outputs, link) {
+ 		struct zxdg_output_v1* xdg_output = zxdg_output_manager_v1_get_xdg_output(this->output_manager, node->output);
+ 		struct zxdg_output_v1_listener* xdg_listener = malloc(sizeof(struct zxdg_output_v1_listener));
+-		xdg_listener->description = nop;
+-		xdg_listener->done = nop;
+-		xdg_listener->logical_position = nop;
++		xdg_listener->description = nop_xdg_listener_description;
++		xdg_listener->done = nop_xdg_listener_done;
++		xdg_listener->logical_position = nop_xdg_listener_logical_position;
+ 		xdg_listener->logical_size = get_res;
+ 		xdg_listener->name = get_name;
+ 		zxdg_output_v1_add_listener(xdg_output, xdg_listener, node);
+@@ -494,7 +502,7 @@ void bar_init(struct map* config, const char* bar_name, char* output_name, const
+ 
+ 	struct zwlr_layer_surface_v1_listener* surface_listener = malloc(sizeof(struct zwlr_layer_surface_v1_listener));
+ 	surface_listener->configure = config_surface;
+-	surface_listener->closed = nop;
++	surface_listener->closed = nop_surface_listener_closed;
+ 	zwlr_layer_surface_v1_add_listener(this->surface, surface_listener, NULL);
+ 	wl_surface_commit(wl_surface);
+ 	wl_display_roundtrip(wl);
+-- 
+2.51.2
+
