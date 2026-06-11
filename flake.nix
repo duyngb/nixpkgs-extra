@@ -33,6 +33,30 @@
 
       legacyPackages = forAllSystems (system: self.packages.${system});
 
+      checks = forAllSystems (
+        system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ self.overlays.default ];
+          };
+        in
+        {
+          default = pkgs.mkShellNoCC {
+            name = "nix-check-shell";
+            buildInputs = with pkgs; [
+              jjui
+              jujutsu
+              lumen
+              otel-tui
+              pipelight-rs
+              playerctl
+              rootbar
+            ];
+          };
+        }
+      );
+
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
     };
 
