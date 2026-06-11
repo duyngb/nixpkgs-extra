@@ -42,18 +42,15 @@
           };
         in
         {
-          default = pkgs.mkShellNoCC {
-            name = "nix-check-shell";
-            buildInputs = with pkgs; [
-              jjui
-              jujutsu
-              lumen
-              otel-tui
-              pipelight-rs
-              playerctl
-              rootbar
-            ];
-          };
+          inherit (pkgs)
+            jjui
+            jujutsu
+            lumen
+            otel-tui
+            pipelight-rs
+            playerctl
+            rootbar
+            ;
         }
       );
 
