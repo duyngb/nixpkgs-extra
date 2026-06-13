@@ -50,6 +50,7 @@
             pipelight-rs
             playerctl
             rootbar
+            terminus-vi
             ;
         }
       );
