@@ -45,7 +45,7 @@
           inherit (pkgs)
             jjui
             jujutsu
-            lumen
+            lumen-diff
             otel-tui
             pipelight-rs
             playerctl
