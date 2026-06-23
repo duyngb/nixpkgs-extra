@@ -28,5 +28,9 @@ jobs:
         name: duyngb
         authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
     - name: Run nix check
-      run: >-
-        nix run 'nixpkgs#nix-fast-build' -- --no-download --skip-cached --no-nom
+      run:
+        nix run 'nixpkgs#nix-fast-build' --
+          --no-download
+          --skip-cached
+          --no-nom
+          --max-jobs 1
