@@ -29,10 +29,7 @@
       packages = forAllSystems (
         system:
         let
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [ self.overlays.default ];
-          };
+          pkgs = nixpkgs-for-system.${system};
         in
         nixpkgs.lib.packagesFromDirectoryRecursive {
           callPackage = nixpkgs.lib.callPackageWith pkgs;
