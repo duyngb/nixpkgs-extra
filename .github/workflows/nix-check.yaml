@@ -18,6 +18,7 @@ jobs:
     - name: Install nix
       uses: cachix/install-nix-action@v31
       with:
+        install_optiosn: --no-daemon
         nix_path: nixpkgs=channel:nixos-26.05
         extra_nix_config: |
           cores = 1
