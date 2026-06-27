@@ -45,6 +45,8 @@
           inherit (pkgs)
             jjui
             jujutsu
+            llama-cpp
+            llama-cpp-cuda
             lumen-diff
             otel-tui
             pipelight-rs
