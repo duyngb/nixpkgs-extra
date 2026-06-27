@@ -10,6 +10,15 @@
       forAllSystems = nixpkgs.lib.genAttrs [
         "x86_64-linux"
       ];
+
+      nixpkgs-for-system = forAllSystems (
+        system:
+        import nixpkgs {
+          inherit system;
+          overlays = [ self.overlays.default ];
+          config.allowUnfree = true;
+        }
+      );
     in
     {
       # ----------------
