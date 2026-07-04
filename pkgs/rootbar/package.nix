@@ -43,17 +43,17 @@ stdenv.mkDerivation {
     wayland
   ];
 
-  meta = with lib; {
+  meta = {
     homepage = "https://hg.sr.ht/~scoopta/rootbar";
-    description = "Bar for Wayland WMs";
+    description = "Bar for wlroots-based Wayland compositors";
     mainProgram = "rootbar";
     longDescription = ''
-      Root Bar is a bar for wlroots based wayland compositors such as sway and
-      was designed to address the lack of good bars for wayland.
+      Root Bar is a bar for wlroots-based Wayland compositors such as Sway and
+      was designed to address the lack of good bars for Wayland.
     '';
-    license = licenses.gpl3Plus;
-    maintainers = with maintainers; [ ];
-    platforms = platforms.unix;
+    license = lib.licenses.gpl3Plus;
+    maintainers = [ ];
+    platforms = lib.platforms.unix;
     broken = stdenv.hostPlatform.isDarwin;
   };
 }
