@@ -1,6 +1,7 @@
 {
   lib,
   stdenv,
+  fetchhg,
   pkg-config,
   meson,
   ninja,
@@ -15,10 +16,10 @@ stdenv.mkDerivation {
   pname = "rootbar";
   version = "unstable-2025-01-01";
 
-  # https://hg.sr.ht/~scoopta/rootbar @ 36333af9fd8d
-  src = fetchTarball {
-    url = "https://hg.sr.ht/~scoopta/rootbar/archive/36333af9fd8d7062158b302eb84b6296f538e306.tar.gz";
-    sha256 = "sha256:0gfxr92xpfivg85l5v3lhp6s3f74bk6qg4rn9f5rflh42g32gvnb";
+  src = fetchhg {
+    url = "https://hg.sr.ht/~scoopta/rootbar";
+    rev = "36333af9fd8d";
+    sha256 = "sha256-CpORCSJyHZhcK14EhjxoPt/h0026NU5J/kicL1dX96o=";
   };
 
   patches = [
