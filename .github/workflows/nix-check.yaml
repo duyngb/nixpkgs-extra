@@ -4,6 +4,7 @@ on:
   push:
     branches-ignore:
       - main
+      - citest
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
