@@ -30,12 +30,16 @@ jobs:
           max-jobs = 1
           extra-substituters = https://cache.nixos-cuda.org
           extra-trusted-public-keys = cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M=
+          experimental-features = nix-command flakes
+          keep-env-derivations = true
+
     - name: Enable cachix
       uses: cachix/cachix-action@v17
       with:
         name: duyngb
         authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
         pushFilter: "(-source$|-vendor$|-vendor-staging$|-go-modules$)"
+
     - name: Run nix check
       run:
         nix run 'nixpkgs#nix-fast-build' --
