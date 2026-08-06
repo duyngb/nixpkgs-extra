@@ -5,16 +5,16 @@
 }:
 
 stable.jujutsu.overrideAttrs (final: rec {
-  version = "0.43.0";
+  version = "0.44.0";
 
   src = fetchFromGitHub {
     owner = "jj-vcs";
     repo = "jj";
     tag = "v${version}";
-    hash = "sha256-XgBq2ZN34iWlwKVgW7Syr46KUdt7pJuSDd/J6QWJwwQ=";
+    hash = "sha256-ojhsg083nb/GWzNIaLzCg0/9hdCHkb3xdrvGqxhNDmY=";
   };
 
-  cargoHash = "sha256-bEvpTd+FAHrD+CZN7+AuCuThyJ5LtufQR7OrGpjrWK0=";
+  cargoHash = "sha256-RrIZS8BjG4a4sKgXdYF/kgq2saRMXjr8Ao6lOCJMmtU=";
 
   cargoDeps = rustPlatform.fetchCargoVendor {
     inherit src;
