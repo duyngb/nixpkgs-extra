@@ -44,6 +44,7 @@
         {
           inherit (pkgs)
             encoredev
+            hax
             jjui
             jujutsu
             llama-cpp
