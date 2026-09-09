@@ -1,0 +1,30 @@
+From 30206779f0c121b5a59097497f3dbfc08e8f0f9d Mon Sep 17 00:00:00 2001
+From: duyngb <sau.nguyen@outlook.com>
+Date: Thu, 27 Aug 2026 14:26:42 +0200
+Subject: [PATCH] Correct default data location of PostgreSQL
+
+Since version 18, docker image changed VOLUME instruction
+from `/var/lib/postgresql/data` to `/var/lib/postgresql`.
+Docker would automatically attach an anonymous volume to
+this location if unset. This lead to some very confusing
+situations where data did not land on where it should be.
+---
+ cli/daemon/sqldb/docker/docker.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cli/daemon/sqldb/docker/docker.go b/cli/daemon/sqldb/docker/docker.go
+index 812b45e..6b64ae9 100644
+--- a/cli/daemon/sqldb/docker/docker.go
++++ b/cli/daemon/sqldb/docker/docker.go
+@@ -28,7 +28,7 @@ const (
+ 	DefaultSuperuserUsername = "postgres"
+ 	DefaultSuperuserPassword = "postgres"
+ 	DefaultRootDatabase      = "postgres"
+-	defaultDataDir           = "/var/lib/postgresql/data"
++	defaultDataDir           = "/var/lib/postgresql"
+ )
+ 
+ func (d *Driver) CreateCluster(ctx context.Context, p *sqldb.CreateParams, log zerolog.Logger) (status *sqldb.ClusterStatus, err error) {
+-- 
+2.54.0
+

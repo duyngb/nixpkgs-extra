@@ -1,0 +1,26 @@
+From 99610f7fcdfacfd8ea3f1db1ef9b2ea864b131ea Mon Sep 17 00:00:00 2001
+From: duyngb <sau.nguyen@outlook.com>
+Date: Thu, 27 Aug 2026 14:26:42 +0200
+Subject: [PATCH] Remember to remove nsqd data dir
+
+---
+ cli/daemon/pubsub/nsq.go | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/cli/daemon/pubsub/nsq.go b/cli/daemon/pubsub/nsq.go
+index b4f5894..5c263de 100644
+--- a/cli/daemon/pubsub/nsq.go
++++ b/cli/daemon/pubsub/nsq.go
+@@ -83,6 +83,9 @@ func (n *NSQDaemon) Stop() {
+ 	if n.nsqd != nil {
+ 		n.nsqd.Exit()
+ 	}
++	if n.Opts != nil && n.Opts.DataPath != "" {
++		_ = os.RemoveAll(n.Opts.DataPath)
++	}
+ }
+ 
+ type logAdapter struct{ serviceName string }
+-- 
+2.54.0
+
