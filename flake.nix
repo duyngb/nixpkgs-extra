@@ -46,6 +46,7 @@
         in
         {
           inherit (pkgs)
+            encoredev
             jjui
             jujutsu
             llama-cpp
