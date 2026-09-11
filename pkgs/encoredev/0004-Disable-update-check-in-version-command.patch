@@ -1,0 +1,67 @@
+From f698fc7cae7b2f24e344fcda600642b63219556a Mon Sep 17 00:00:00 2001
+From: duyngb <sau.nguyen@outlook.com>
+Date: Sat, 12 Sep 2026 14:48:41 +0700
+Subject: [PATCH] Disable update check in version command
+
+---
+ cli/cmd/encore/version.go | 34 ----------------------------------
+ 1 file changed, 34 deletions(-)
+
+diff --git a/cli/cmd/encore/version.go b/cli/cmd/encore/version.go
+index d7cbf1d..85a4abf 100644
+--- a/cli/cmd/encore/version.go
++++ b/cli/cmd/encore/version.go
+@@ -7,7 +7,6 @@ import (
+ 	"strings"
+ 	"time"
+ 
+-	"github.com/logrusorgru/aurora/v3"
+ 	"github.com/spf13/cobra"
+ 
+ 	"encr.dev/cli/internal/update"
+@@ -20,42 +19,9 @@ var versionCmd = &cobra.Command{
+ 
+ 	DisableFlagsInUseLine: true,
+ 	Run: func(cmd *cobra.Command, args []string) {
+-		var (
+-			ver *update.LatestVersion
+-			err error
+-		)
+-		if version.Version != "" {
+-			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+-			defer cancel()
+-			ver, err = update.Check(ctx)
+-		}
+-
+ 		// NOTE: This output format is relied on by the Encore IntelliJ plugin.
+ 		// Don't change this without considering its impact on that plugin.
+ 		fmt.Fprintln(os.Stdout, "encore version", version.Version)
+-
+-		if err != nil {
+-			fatalf("could not check for update: %v", err)
+-		} else if ver.IsNewer(version.Version) {
+-			if ver.ForceUpgrade {
+-				fmt.Println(aurora.Red("An urgent security update for Encore is available."))
+-				if ver.SecurityNotes != "" {
+-					fmt.Println(aurora.Sprintf(aurora.Yellow("%s"), ver.SecurityNotes))
+-				}
+-
+-				versionUpdateCmd.Run(cmd, args)
+-			} else {
+-				if ver.SecurityUpdate {
+-					fmt.Println(aurora.Sprintf(aurora.Red("A security update is update available: %s -> %s\nUpdate with: encore version update"), version.Version, ver.Version()))
+-
+-					if ver.SecurityNotes != "" {
+-						fmt.Println(aurora.Sprintf(aurora.Yellow("%s"), ver.SecurityNotes))
+-					}
+-				} else {
+-					fmt.Println(aurora.Sprintf(aurora.Yellow("Update available: %s -> %s\nUpdate with: encore version update"), version.Version, ver.Version()))
+-				}
+-			}
+-		}
+ 	},
+ }
+ 
+-- 
+2.54.0
+

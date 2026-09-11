@@ -1,0 +1,57 @@
+From a42896d5939f7328a4b44b85203a27a018f8973d Mon Sep 17 00:00:00 2001
+From: duyngb <sau.nguyen@outlook.com>
+Date: Sat, 12 Sep 2026 14:17:02 +0700
+Subject: [PATCH] Reduce log noise
+
+---
+ cli/daemon/engine/trace2/sqlite/write.go | 6 +++---
+ cli/daemon/secret/secret.go              | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/cli/daemon/engine/trace2/sqlite/write.go b/cli/daemon/engine/trace2/sqlite/write.go
+index 07d8150..b5183ff 100644
+--- a/cli/daemon/engine/trace2/sqlite/write.go
++++ b/cli/daemon/engine/trace2/sqlite/write.go
+@@ -62,7 +62,7 @@ func (s *Store) CleanEvery(ctx context.Context, freq time.Duration, triggerAt, e
+ }
+ 
+ func (s *Store) DoClean(ctx context.Context, triggerAt, eventsToKeep, batchSize int) error {
+-	log.Info().Msg("initiating trace event cleanup sweep")
++	log.Trace().Msg("initiating trace event cleanup sweep")
+ 	rows, err := s.db.QueryContext(ctx, "SELECT app_id FROM trace_event GROUP BY app_id HAVING COUNT(distinct trace_id) > ?", triggerAt)
+ 	if err != nil {
+ 		return errors.Wrap(err, "query app ids")
+@@ -104,7 +104,7 @@ func (s *Store) DoClean(ctx context.Context, triggerAt, eventsToKeep, batchSize
+ 			log.Error().Err(err).Msg("failed to get rows affected")
+ 			continue
+ 		}
+-		log.Info().Str("app_id", appID).Int64("deleted", rowCount).Msg("cleaned up old trace events")
++		log.Trace().Str("app_id", appID).Int64("deleted", rowCount).Msg("cleaned up old trace events")
+ 		res, err = s.db.ExecContext(ctx, "DELETE FROM trace_span_index WHERE app_id = ? AND trace_id IN ("+idArgs+")", appID)
+ 		if err != nil {
+ 			log.Error().Err(err).Msg("failed to delete old trace spans")
+@@ -115,7 +115,7 @@ func (s *Store) DoClean(ctx context.Context, triggerAt, eventsToKeep, batchSize
+ 			log.Error().Err(err).Msg("failed to get rows affected")
+ 			continue
+ 		}
+-		log.Info().Str("app_id", appID).Int64("deleted", rowCount).Msg("cleaned up old trace spans")
++		log.Trace().Str("app_id", appID).Int64("deleted", rowCount).Msg("cleaned up old trace spans")
+ 	}
+ 
+ 	return nil
+diff --git a/cli/daemon/secret/secret.go b/cli/daemon/secret/secret.go
+index 61e247e..8a43e04 100644
+--- a/cli/daemon/secret/secret.go
++++ b/cli/daemon/secret/secret.go
+@@ -223,7 +223,7 @@ func (mgr *Manager) startPolling() {
+ 				if res.Err != nil {
+ 					log.Error().Err(res.Err).Str("app_id", s).Msg("failed to sync secrets")
+ 				} else {
+-					log.Info().Str("app_id", s).Msg("successfully synced app secrets")
++					log.Trace().Str("app_id", s).Msg("successfully synced app secrets")
+ 				}
+ 			}
+ 		}
+-- 
+2.54.0
+

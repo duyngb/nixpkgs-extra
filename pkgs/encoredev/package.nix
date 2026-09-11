@@ -4,6 +4,8 @@
   fetchurl,
   buildGoModule,
   versionCheckHook,
+  emptyDirectory,
+  stdenv,
 }:
 
 let
@@ -20,6 +22,24 @@ let
   encore-cli = fetchurl {
     url = "https://d2f391esomvqpi.cloudfront.net/encore-1.58.4-linux_amd64.tar.gz";
     sha256 = "69c2b5959f52adc9c249edba0562987da2d06f1f59926be52a410ceddd5734b6";
+  };
+
+  encore-runtimes = stdenv.mkDerivation {
+    pname = "encore-runtimes";
+    version = "1.58.4";
+
+    src = emptyDirectory;
+
+    env = {
+      encore_cli = encore-cli;
+    };
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out
+      tar -xf $encore_cli -C $out ./encore-go ./runtimes
+      runHook postInstall
+    '';
   };
 in
 
@@ -41,10 +61,23 @@ buildGoModule (final: {
     "-X encr.dev/internal/version.Version=v${final.version}"
   ];
 
-  patches = [
-    ./0001-correct-volume-mount.patch
-    ./0002-nsqd-tmpdir.patch
-  ];
+  patches =
+    let
+      isPathName = n: lib.strings.hasSuffix ".patch" n;
+      isPatch = lib.filter isPathName;
+    in
+    lib.pipe ./. [
+      lib.filesystem.listFilesRecursive
+      isPatch
+    ];
+
+  # patches = [
+  #   ./01-correct-volume-mount.patch
+  #   ./02-nsqd-tmpdir.patch
+  #   ./03-run-memfs.patch
+  #   ./04-reduce-log-noise.patch
+  #   ./05-no-update-check.patch
+  # ];
 
   subPackages = [
     "cli/cmd/encore"
@@ -52,12 +85,11 @@ buildGoModule (final: {
   ];
 
   postInstall = ''
-    tar -xf $encore_cli -C $out ./encore-go
-    cp -r runtimes $out/runtimes
+    ln -s -t $out $encore_runtimes/runtimes $encore_runtimes/encore-go
   '';
 
   env = {
-    encore_cli = encore-cli;
+    encore_runtimes = encore-runtimes;
     CGO_ENABLED = 1;
   };
 
@@ -81,6 +113,7 @@ buildGoModule (final: {
     inherit
       encore-go
       encore-cli
+      encore-runtimes
       ;
   };
 

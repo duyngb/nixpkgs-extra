@@ -1,0 +1,33 @@
+From 5c7a09af7a52311048259d002ddf7ba2dacf1052 Mon Sep 17 00:00:00 2001
+From: duyngb <sau.nguyen@outlook.com>
+Date: Sat, 12 Sep 2026 10:51:45 +0700
+Subject: [PATCH] Testing memfs on local run
+
+---
+ cli/daemon/sqldb/driver.go | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/cli/daemon/sqldb/driver.go b/cli/daemon/sqldb/driver.go
+index 0d06159..d4bf6c5 100644
+--- a/cli/daemon/sqldb/driver.go
++++ b/cli/daemon/sqldb/driver.go
+@@ -3,6 +3,7 @@ package sqldb
+ import (
+ 	"context"
+ 	"errors"
++	"os"
+ 
+ 	"github.com/rs/zerolog"
+ 
+@@ -70,7 +71,7 @@ const (
+ func (ct ClusterType) Memfs() bool {
+ 	switch ct {
+ 	case Run:
+-		return false
++		return os.Getenv("ENCORE_DAEMON_USE_MEMFS") == "1"
+ 	case Shadow, Test:
+ 		return true
+ 	default:
+-- 
+2.54.0
+
