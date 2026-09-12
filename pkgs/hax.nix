@@ -12,13 +12,13 @@
 
 stdenv.mkDerivation (final: {
   pname = "hax";
-  version = "0.3.0";
+  version = "0.5.0";
 
   src = fetchFromGitHub {
     owner = "OleksandrChekhovskyi";
     repo = "hax";
     tag = "v${final.version}";
-    hash = "sha256-KdXnOb/JLEdPgZOliKU0PHNL04jxgUpfeukKIuGmoKo=";
+    hash = "sha256-d3gbxS+4q1UqtkGfcqF37yCKoQ4vprupgI2TN+3v4aM=";
   };
 
   buildInputs = [
