@@ -1,5 +1,3 @@
-{ inputs, ... }:
-
 let
   additions =
     final: prev:
@@ -9,13 +7,5 @@ let
     });
 in
 {
-  default =
-    final: prev:
-
-    {
-      inherit inputs;
-      stable = prev;
-    }
-
-    // (additions final prev);
+  default = final: prev: { stable = prev; } // (additions final prev);
 }

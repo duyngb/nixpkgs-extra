@@ -1,35 +1,32 @@
 {
   outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      ...
-    }:
+    inputs@{ nixpkgs, ... }:
 
     let
       forAllSystems = nixpkgs.lib.genAttrs [
         "x86_64-linux"
       ];
 
+      overlays = import ./overlays.nix;
+
       nixpkgs-for-system = forAllSystems (
         system:
         import nixpkgs {
           inherit system;
-          overlays = [ self.overlays.default ];
+          overlays = [ overlays.default ];
           config.allowUnfree = true;
         }
       );
+
+      nixpkgs-for = system: nixpkgs-for-system.${system};
     in
     {
-      # ----------------
-      # NixPkgs Overlays
-      # ----------------
-      overlays = import ./overlays.nix { inherit inputs; };
+      inherit overlays;
 
       packages = forAllSystems (
         system:
         let
-          pkgs = nixpkgs-for-system.${system};
+          pkgs = nixpkgs-for system;
         in
         nixpkgs.lib.packagesFromDirectoryRecursive {
           callPackage = nixpkgs.lib.callPackageWith pkgs;
@@ -37,12 +34,12 @@
         }
       );
 
-      legacyPackages = forAllSystems (system: self.packages.${system});
+      legacyPackages = forAllSystems nixpkgs-for;
 
       checks = forAllSystems (
         system:
         let
-          pkgs = nixpkgs-for-system.${system};
+          pkgs = nixpkgs-for system;
         in
         {
           inherit (pkgs)
@@ -61,7 +58,7 @@
         }
       );
 
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+      formatter = forAllSystems (system: (nixpkgs-for system).nixfmt-tree);
     };
 
   inputs = {
