@@ -43,6 +43,7 @@
         in
         {
           inherit (pkgs)
+            agentsview-bin
             encoredev
             hax
             jjui
