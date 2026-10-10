@@ -23,10 +23,11 @@ stdenv.mkDerivation {
   };
 
   patches = [
-    ./0001-update-mpris-plugin.patch
-    ./0002-allow-bar-s-output-to-be-omitted.patch
-    ./0003-fix-crash-on-bad-mpris-messages.patch
-    ./0004-fix-function-prototypes.patch
+    ./0001-Update-MPRIS-plugin.patch
+    ./0002-Allow-bar-s-output-to-be-omitted.patch
+    ./0003-Fix-crash-on-bad-MPRIS-messages.patch
+    ./0004-Fix-function-prototypes-on-gcc-15.patch
+    ./0005-fix-cpu-stats-collecting.patch
   ];
 
   nativeBuildInputs = [

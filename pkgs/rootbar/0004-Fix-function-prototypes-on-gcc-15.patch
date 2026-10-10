@@ -1,7 +1,7 @@
 From f2812c1f00cc635289371ba2e09cd2894a8e41b7 Mon Sep 17 00:00:00 2001
 From: duyngb <sau.nguyen@outlook.com>
 Date: Sun, 31 May 2026 09:00:35 +0700
-Subject: [PATCH 4/4] Fix function prototypes
+Subject: [PATCH] Fix function prototypes on gcc 15
 
 ---
  inc/map.h |  2 +-
@@ -74,5 +74,5 @@ index e299435..3dd9866 100644
  	wl_surface_commit(wl_surface);
  	wl_display_roundtrip(wl);
 -- 
-2.51.2
+2.54.0
 

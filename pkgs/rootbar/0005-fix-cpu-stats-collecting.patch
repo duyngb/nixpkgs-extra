@@ -1,0 +1,82 @@
+From 3f9fa7fc6ada2756e05b1f7276e192038da96734 Mon Sep 17 00:00:00 2001
+From: duyngb <sau.nguyen@outlook.com>
+Date: Sat, 10 Oct 2026 17:30:29 +0700
+Subject: [PATCH] fix cpu stats collecting
+
+---
+ plugins/cpu.c | 50 +++++++++++++++++++++++---------------------------
+ 1 file changed, 23 insertions(+), 27 deletions(-)
+
+diff --git a/plugins/cpu.c b/plugins/cpu.c
+index 9b31b12..2996527 100644
+--- a/plugins/cpu.c
++++ b/plugins/cpu.c
+@@ -34,42 +34,38 @@ struct cpu {
+ 
+ static void sample(struct cpu* this, uint64_t* total, uint64_t* idle) {
+ 	FILE* stat = fopen("/proc/stat", "r");
++	if(stat == NULL) {
++		*total = 0;
++		*idle = 0;
++		return;
++	}
+ 	char* line = NULL;
+ 	size_t size = 0;
+-	char* cmp;
++	char target[32];
+ 	if(this->core == NULL || strcmp(this->core, "total") == 0) {
+-		cmp = utils_concat(2, "cpu", " ");
++		snprintf(target, sizeof(target), "cpu");
+ 	} else {
+-		cmp = utils_concat(2, "cpu", this->core);
++		snprintf(target, sizeof(target), "cpu%s", this->core);
+ 	}
++	size_t target_len = strlen(target);
++	*total = 0;
++	*idle = 0;
++
+ 	while(getline(&line, &size, stat) != -1) {
+-		if(strncmp(line, cmp, 4) == 0) {
+-			char* space = strchr(line, ' ');
+-			size_t space_count = 0;
+-			while(space != NULL) {
+-				++space_count;
+-				*space = 0;
+-				space = strchr(space + 1, ' ');
+-			}
+-			char* time = line + strlen(line);
+-			if(strcmp(cmp, "cpu ") == 0) {
+-				space_count -= 2;
+-				time += 2;
+-			} else {
+-				--space_count;
+-				++time;
+-			}
+-			*total = 0;
+-			for(size_t count = 0; count < space_count; ++count) {
+-				if(count == 3) {
+-					*idle = strtol(time, NULL, 10);
+-				}
+-				*total += strtol(time, NULL, 10);
+-				time += strlen(time) + 1;
++		if(strncmp(line, target, target_len) == 0 && (line[target_len] == ' ' || line[target_len] == '\t')) {
++			uint64_t user = 0, nice = 0, system = 0, idle_t = 0, iowait = 0;
++			uint64_t irq = 0, softirq = 0, steal = 0, guest = 0, guest_nice = 0;
++			int parsed = sscanf(line + target_len, "%lu %lu %lu %lu %lu %lu %lu %lu %lu %lu",
++			                    &user, &nice, &system, &idle_t,
++			                    &iowait, &irq, &softirq, &steal,
++			                    &guest, &guest_nice);
++			if(parsed >= 4) {
++				*idle = idle_t + iowait;
++				*total = user + nice + system + idle_t + iowait + irq + softirq + steal;
+ 			}
++			break;
+ 		}
+ 	}
+-	free(cmp);
+ 	fclose(stat);
+ 	free(line);
+ }
+-- 
+2.54.0
+
