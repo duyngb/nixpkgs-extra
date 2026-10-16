@@ -8,11 +8,11 @@
 
 stdenv.mkDerivation (rec {
   pname = "agentsview-bin";
-  version = "0.44.0";
+  version = "0.45.0";
 
   src = fetchurl {
     url = "https://github.com/kenn-io/agentsview/releases/download/v${version}/agentsview_${version}_linux_amd64.tar.gz";
-    sha256 = "sha256-A36npG1S4GsgNjtKp81/KOMvMdghWAPW6aDJa6xYGOM=";
+    sha256 = "sha256-/5kPprHNQwC9KODe+pC8gmHvP3YPLVhBEtegpllqUxM=";
   };
 
   dontUnpack = true; # archive has no top-level dir
