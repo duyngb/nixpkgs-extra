@@ -8,13 +8,13 @@
 }:
 buildGo127Module (final: {
   pname = "jjui";
-  version = "0.10.11";
+  version = "0.10.12";
 
   src = fetchFromGitHub {
     owner = "idursun";
     repo = "jjui";
     tag = "v${final.version}";
-    hash = "sha256-dHw1imeAenwa1/+bgcpS9LUs59UlJDS5LAujoIabVH0=";
+    hash = "sha256-tPPvsuMeMIrlSZLkTVXLNrlF6BerNsNjc0vfYO31F18=";
   };
 
   vendorHash = "sha256-gHfE924uFXtSyRbt2uxK+1/lU04aC1wCgoHWJ3gE7xo=";
