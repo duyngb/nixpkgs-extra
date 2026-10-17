@@ -56,6 +56,7 @@
             playerctl
             rootbar
             terminus-vi
+            tuios
             ;
         }
       );
