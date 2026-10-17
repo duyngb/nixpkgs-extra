@@ -6,11 +6,11 @@
 
 stdenv.mkDerivation (final: {
   pname = "poe";
-  version = "2.0.4";
+  version = "2.1.2";
 
   src = fetchurl {
     url = "https://git.sr.ht/~strahinja/poe/archive/v${final.version}.tar.gz";
-    hash = "sha256-NC6Q97QVKwlx94BB6KozrI8+Yn8tyVQuaqj5ygu2e1M=";
+    hash = "sha256-CCz74MIHQSrbcjphgO11V6Qu1TFWSYU0+TqMjaH8C/Y=";
   };
 
   patchPhase = ''
