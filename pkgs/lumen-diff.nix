@@ -9,16 +9,16 @@
 
 rustPlatform.buildRustPackage (final: {
   pname = "lumen-diff";
-  version = "2.30.0";
+  version = "2.32.0";
 
   src = fetchFromGitHub {
     owner = "jnsahaj";
     repo = "lumen";
     tag = "v${final.version}";
-    hash = "sha256-EoxMYlWHmuprjjhvj3GyCxGDIcT/d+JMda9j75pqs+k=";
+    hash = "sha256-wTkg7NGCCON1P422q5/76rodIBqDeWIY07J4pRo8Q8k=";
   };
 
-  cargoHash = "sha256-qTFRfy+Wutee5SbaMaqcYjXgr6xZKYYBIuyVA7jAGiY=";
+  cargoHash = "sha256-ZXw7KEvf1sUHWIM5R4Th2SmekTX6rGXznAq3mtcf3Zo=";
 
   nativeBuildInputs = [
     pkg-config
