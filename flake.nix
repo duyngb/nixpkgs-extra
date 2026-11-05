@@ -44,17 +44,20 @@
         {
           inherit (pkgs)
             agentsview-bin
+            codanna-bin
             encoredev
             hax
             jjui
             jujutsu
+            kwok
             llama-cpp
             llama-cpp-cuda
             lumen-diff
             otel-tui
-            pipelight-rs
             playerctl
             rootbar
+            sofka
+            slopdex
             terminus-vi
             tuios
             ;
