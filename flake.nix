@@ -57,7 +57,7 @@
             playerctl
             rootbar
             sofka
-            slopdex
+            slopdex-bin
             terminus-vi
             tuios
             ;
