@@ -44,7 +44,7 @@
         {
           inherit (pkgs)
             agentsview-bin
-            codanna-bin
+            codanna
             encoredev
             hax
             jjui
