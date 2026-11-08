@@ -45,6 +45,7 @@
           inherit (pkgs)
             agentsview-bin
             codanna
+            codegraph-cam
             encoredev
             hax
             jjui
