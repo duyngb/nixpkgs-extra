@@ -46,6 +46,7 @@
             agentsview-bin
             codanna
             codegraph-cam
+            dbdelve
             encoredev
             hax
             jjui
@@ -57,8 +58,8 @@
             otel-tui
             playerctl
             rootbar
-            sofka
             slopdex-bin
+            sofka
             terminus-vi
             tuios
             ;
