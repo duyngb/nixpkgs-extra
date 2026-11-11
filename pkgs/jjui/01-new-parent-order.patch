@@ -1,0 +1,186 @@
+From 8e43a57443de72241c638f558f6fd2bf3ab1827f Mon Sep 17 00:00:00 2001
+From: ibrahim dursun <ibrahim@dursun.cc>
+Date: Sun, 18 Oct 2026 00:06:58 +0100
+Subject: [PATCH] fix(revisions): keep selection order for checked revisions
+
+Checked revisions were stored in a map and read back in log order, so
+'jj new' got its parents in log order instead of the order the user
+checked them. Git treats the first parent as the main line, so the
+wrong order can pull unrelated history into a pull request.
+
+fixes #766
+---
+ ...scenario_new_revision_parent_order_test.go | 78 +++++++++++++++++++
+ internal/ui/revisions/revisions.go            | 42 ++++++----
+ 2 files changed, 104 insertions(+), 16 deletions(-)
+ create mode 100644 e2e/scenario_new_revision_parent_order_test.go
+
+diff --git a/e2e/scenario_new_revision_parent_order_test.go b/e2e/scenario_new_revision_parent_order_test.go
+new file mode 100644
+index 00000000..5d871659
+--- /dev/null
++++ b/e2e/scenario_new_revision_parent_order_test.go
+@@ -0,0 +1,78 @@
++//go:build e2e
++
++package main
++
++import (
++	"strings"
++	"testing"
++)
++
++func Test_Revisions_NewRevisionKeepsSelectionOrderForParents(t *testing.T) {
++	t.Parallel()
++	h := NewHarness(t)
++	h.repo.
++		Append("README.md", "older\n").
++		Commit("older").
++		New("@--").
++		Write("other.txt", "newer\n").
++		Commit("newer")
++
++	h.Start("older")
++	h.WaitTextInOrder("newer", "older")
++
++	// Check older first, then move up and check newer. The selection order
++	// is the reverse of the log order. The default space action also jumps
++	// to the parent, so after checking older the cursor is on initial.
++	h.Key("j")
++	h.Key("j")
++	h.Key(" ")
++	waitForCheckedRevisions(h, "older")
++	h.Key("k")
++	h.Key("k")
++	h.Key(" ")
++	waitForCheckedRevisions(h, "newer", "older")
++	h.Key("n")
++
++	var parents string
++	waitFor(t, h.ctx, func() (bool, error) {
++		out, err := commandOutput(h.Repo(), h.Env(), "jj", "log", "-r", "@", "--no-graph", "--color", "never",
++			"-T", `parents.map(|c| c.description().first_line()).join(",")`)
++		if err != nil {
++			return false, nil
++		}
++		parents = strings.TrimSpace(out)
++		return strings.Contains(parents, ","), nil
++	})
++
++	if parents != "older,newer" {
++		t.Fatalf("parents of new revision = %q, want %q (selection order)", parents, "older,newer")
++	}
++
++	h.Quit()
++}
++
++// The checkmark is on the header row, directly above the description.
++func waitForCheckedRevisions(h *Harness, descriptions ...string) {
++	h.t.Helper()
++	_, err := h.session.WaitForStableScreen(h.ctx, 3, func(screen []string) bool {
++		checked := 0
++		for _, row := range screen {
++			if strings.Contains(row, "✓") {
++				checked++
++			}
++		}
++		if checked != len(descriptions) {
++			return false
++		}
++		for _, description := range descriptions {
++			row := screenRowIndexContaining(screen, description)
++			if row < 1 || !strings.Contains(screen[row-1], "✓") {
++				return false
++			}
++		}
++		return true
++	})
++	if err != nil {
++		h.t.Fatalf("waiting for checked revisions %q: %v", descriptions, err)
++	}
++}
+diff --git a/internal/ui/revisions/revisions.go b/internal/ui/revisions/revisions.go
+index 217e9238..e016b009 100644
+--- a/internal/ui/revisions/revisions.go
++++ b/internal/ui/revisions/revisions.go
+@@ -73,6 +73,7 @@ type Model struct {
+ 	ensureCursorView       bool
+ 	requestInFlight        bool
+ 	checkedRevisions       map[string]appContext.SelectedRevision
++	checkedOrder           []string // commit ids in the order they were checked
+ 	focused                bool
+ }
+ 
+@@ -393,16 +394,7 @@ func (m *Model) SelectedRevision() *jj.Commit {
+ }
+ 
+ func (m *Model) SelectedRevisions() jj.SelectedRevisions {
+-	var selected []*jj.Commit
+-	for _, row := range m.rows {
+-		if row.Commit == nil {
+-			continue
+-		}
+-		if _, ok := m.checkedRevisions[row.Commit.CommitId]; ok {
+-			selected = append(selected, row.Commit)
+-		}
+-	}
+-
++	selected := m.checkedCommits()
+ 	if len(selected) == 0 {
+ 		return jj.NewSelectedRevisions(m.SelectedRevision())
+ 	}
+@@ -431,16 +423,29 @@ func (m *Model) Selection() common.SelectionSnapshot {
+ 	return snapshot
+ }
+ 
+-func (m *Model) checkedRevisionItems() []common.SelectedItem {
+-	items := make([]common.SelectedItem, 0, len(m.checkedRevisions))
++// checkedCommits keeps selection order; `jj new` uses it as the parent order.
++func (m *Model) checkedCommits() []*jj.Commit {
++	loaded := make(map[string]*jj.Commit, len(m.rows))
+ 	for _, row := range m.rows {
+-		if row.Commit == nil {
+-			continue
++		if row.Commit != nil {
++			loaded[row.Commit.CommitId] = row.Commit
+ 		}
+-		if item, ok := m.checkedRevisions[row.Commit.CommitId]; ok {
+-			items = append(items, item)
++	}
++	var commits []*jj.Commit
++	for _, commitId := range m.checkedOrder {
++		if commit, ok := loaded[commitId]; ok {
++			commits = append(commits, commit)
+ 		}
+ 	}
++	return commits
++}
++
++func (m *Model) checkedRevisionItems() []common.SelectedItem {
++	commits := m.checkedCommits()
++	items := make([]common.SelectedItem, 0, len(commits))
++	for _, commit := range commits {
++		items = append(items, m.checkedRevisions[commit.CommitId])
++	}
+ 	return items
+ }
+ 
+@@ -455,13 +460,18 @@ func (m *Model) checkedRevisionMap() map[string]bool {
+ func (m *Model) toggleCheckedRevision(item appContext.SelectedRevision) {
+ 	if _, ok := m.checkedRevisions[item.CommitId]; ok {
+ 		delete(m.checkedRevisions, item.CommitId)
++		m.checkedOrder = slices.DeleteFunc(m.checkedOrder, func(commitId string) bool {
++			return commitId == item.CommitId
++		})
+ 		return
+ 	}
+ 	m.checkedRevisions[item.CommitId] = item
++	m.checkedOrder = append(m.checkedOrder, item.CommitId)
+ }
+ 
+ func (m *Model) clearCheckedRevisions() {
+ 	clear(m.checkedRevisions)
++	m.checkedOrder = nil
+ }
+ 
+ func (m *Model) Init() tea.Cmd {

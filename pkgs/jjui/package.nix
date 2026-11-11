@@ -23,6 +23,10 @@ buildGo127Module (final: {
     "cmd/jjui"
   ];
 
+  patches = [
+    ./01-new-parent-order.patch
+  ];
+
   dontStrip = true;
   ldflags = [
     "-s"
