@@ -62,6 +62,7 @@
             sofka
             terminus-vi
             tuios
+            zellij-unwrapped
             ;
         }
       );
