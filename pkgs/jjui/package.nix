@@ -8,23 +8,19 @@
 }:
 buildGo127Module (final: {
   pname = "jjui";
-  version = "0.10.12";
+  version = "0.10.13";
 
   src = fetchFromGitHub {
     owner = "idursun";
     repo = "jjui";
     tag = "v${final.version}";
-    hash = "sha256-tPPvsuMeMIrlSZLkTVXLNrlF6BerNsNjc0vfYO31F18=";
+    hash = "sha256-PWVdG6pWe01yqIS+jQXGhdt5IVbp2QwTJ1Xx29M2s8E=";
   };
 
-  vendorHash = "sha256-gHfE924uFXtSyRbt2uxK+1/lU04aC1wCgoHWJ3gE7xo=";
+  vendorHash = "sha256-HsS83QvwtKzQigmw3o04fYczvQdLSHXZ2TWsKYTsAoc=";
 
   subPackages = [
     "cmd/jjui"
-  ];
-
-  patches = [
-    ./01-new-parent-order.patch
   ];
 
   dontStrip = true;
