@@ -61,6 +61,7 @@
             slopdex-bin
             sofka
             terminus-vi
+            tty7
             tuios
             windowtolayer
             ;

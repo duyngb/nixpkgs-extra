@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+TryExec=@out@/bin/tty7-app
+Exec=@out@/bin/tty7-app %U
+Icon=tty7
+Terminal=false
+Categories=System;TerminalEmulator;
+
+Name=tty7
+GenericName=terminal
+StartupNotify=true
+StartupWMClass=tty7
