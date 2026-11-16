@@ -9,15 +9,15 @@
 
 rustPlatform.buildRustPackage (f: {
   pname = "sofka";
-  version = "0.35.1";
+  version = "0.37.0";
 
   src = fetchFromGitHub {
     owner = "nklmilojevic";
     repo = "sofka";
     tag = "v${f.version}";
-    hash = "sha256-o9F54joKQ3ypZDs1Lw/AgGN42+fFJOJ+BE4Pou3KkXY=";
+    hash = "sha256-5n9/eZsZa7EIwm8bZvG3cAmXusgLmvPQREEcWSqrIts=";
   };
-  cargoHash = "sha256-l+nQJFB/ZMMO3AI/YoHvk2Lz4D1Q66o6SQJb/A2vdjs=";
+  cargoHash = "sha256-8vSD8EQmzMZM4zuKyPB9gjVHDncHkVycp7sU7/7TUNk=";
 
   buildInputs = [
     cmake
