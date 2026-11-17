@@ -23,6 +23,10 @@ stdenv.mkDerivation (final: {
     hash = "sha256-6nfaAMH5YgK6gimuZ8j1zWLTDOi11KIwW7Bf0Iwh7+I=";
   };
 
+  patches = [
+    ./01-more-systemd-service-check.patch
+  ];
+
   buildInputs = [
     makeBinaryWrapper
   ];

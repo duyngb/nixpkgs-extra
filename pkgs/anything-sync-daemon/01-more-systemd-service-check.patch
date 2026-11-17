@@ -1,0 +1,13 @@
+diff --git a/common/anything-sync-daemon.in b/common/anything-sync-daemon.in
+index 3af2375..1097e06 100644
+--- a/common/anything-sync-daemon.in
++++ b/common/anything-sync-daemon.in
+@@ -530,7 +530,7 @@ do_unsync() {
+ }
+ 
+ parse() {
+-  if [[ -f /usr/lib/systemd/system/asd.service ]]; then
++  if [[ -f /etc/systemd/system/asd.service || -f /usr/lib/systemd/system/asd.service ]]; then
+     # running systemd
+     asd_state=$(systemctl show -p ActiveState --value asd)
+     resync_state=$(systemctl show -p ActiveState --value asd-resync.timer)
