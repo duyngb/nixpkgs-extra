@@ -49,6 +49,7 @@
             dbdelve
             encoredev
             hax
+            herdr
             jjui
             jujutsu
             kwok
