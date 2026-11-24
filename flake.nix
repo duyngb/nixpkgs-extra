@@ -64,6 +64,7 @@
             tty7
             tuios
             windowtolayer
+            zmx-bin
             ;
         }
       );
