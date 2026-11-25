@@ -1,12 +1,20 @@
 {
   lib,
-  stdenv,
-  makeBinaryWrapper,
-  tty7-unwrapped,
-
+  rustPlatform,
+  fetchFromGitHub,
+  cmake,
+  fontconfig,
+  freetype,
+  krb5,
+  libclang,
+  libxcb,
   libxkbcommon,
-  wayland,
+  makeBinaryWrapper,
+  openssl,
+  pkg-config,
   vulkan-loader,
+  wayland,
+  zlib,
 }:
 
 let
@@ -17,19 +25,46 @@ let
   ];
 in
 
-stdenv.mkDerivation {
-  inherit (tty7-unwrapped) pname version meta;
+rustPlatform.buildRustPackage (f: {
+  pname = "tty7";
+  version = "26.10.0";
 
   __structuredAttrs = true;
   strictDeps = true;
 
-  src = tty7-unwrapped;
-  dontUnpack = true;
+  src = fetchFromGitHub {
+    owner = "l0ng-ai";
+    repo = "tty7";
+    tag = "v${f.version}";
+    hash = "sha256-+J6kkg27aqQb/7/rcOf6NJLQ7ICHbUcaW4PDsJiC0ho=";
+  };
 
-  nativeBuildInputs = [ makeBinaryWrapper ];
+  cargoHash = "sha256-VzQsEEvrXZDBp9rqTZsn9pbWKMgX0Z3eC6P8Ag1LZNs=";
 
-  buildPhase = ''
-    cp -rs --no-preserve=mode $src $out
+  patches = [
+    ./01-nix-default-override.patch
+  ];
+
+  buildInputs = [
+    libclang
+    fontconfig
+    freetype
+    krb5
+    libxcb
+    libxkbcommon
+    openssl
+    wayland
+    zlib
+  ];
+
+  nativeBuildInputs = [
+    cmake
+    pkg-config
+    rustPlatform.bindgenHook
+    makeBinaryWrapper
+  ];
+
+  postInstall = ''
     wrapProgram $out/bin/tty7-app \
       --prefix LD_LIBRARY_PATH : ${runtimeDeps} \
       --suffix LD_LIBRARY_PATH : /run/opengl-driver \
@@ -37,8 +72,16 @@ stdenv.mkDerivation {
     for app in tty7 tty7-server; do
       wrapProgram $out/bin/$app --prefix PATH : $out/bin
     done
-    rm $out/share/applications/tty7.desktop
-    substituteAll ${../tty7-unwrapped/tty7.desktop} \
-      $out/share/applications/tty7.desktop
+    install -Dm644 assets/logo.svg $out/share/icons/hicolor/scalable/apps/tty7.svg
+    install -Dm644 assets/logo@256.png $out/share/icons/hicolor/256x256/apps/tty7.png
+    mkdir -p $out/share/applications
+    substituteAll ${./tty7.desktop} $out/share/applications/tty7.desktop
   '';
-}
+
+  doCheck = false;
+
+  meta = {
+    license = lib.licenses.apsl20;
+    mainProgram = "tty7";
+  };
+})
