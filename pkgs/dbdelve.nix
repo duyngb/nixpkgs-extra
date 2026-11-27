@@ -27,16 +27,16 @@ in
 
 rustPlatform.buildRustPackage (f: {
   pname = "dbdelve";
-  version = "0.7.1";
+  version = "0.8.0";
 
   src = fetchFromGitHub {
     owner = "ShayanAbbas1";
     repo = "dbdelve";
     tag = "v${f.version}";
-    hash = "sha256-/NaXkfgYP+HcBeKqwm+3eW2Z0u9q0laFx5Auw56W3Gk=";
+    hash = "sha256-P/qi11q75R1p9Jv8/oLOiJGpGoJjSQ9xfSGSqJeb6X4=";
   };
 
-  cargoHash = "sha256-Tz7uCe4e54TZxPsV27iaoVxA6Z0sddTDDQyQkBasjqE=";
+  cargoHash = "sha256-vetIWgnB8AY/bZhGqgSyI70z0TaMlxH3dFQ93pVCVew=";
   cargoBuildFlags = [
     "-p"
     "dbdelve"
