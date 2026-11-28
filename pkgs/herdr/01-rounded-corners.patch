@@ -1,0 +1,45 @@
+diff -u -r a/src/client/shell/overlays.rs b/src/client/shell/overlays.rs
+--- a/src/client/shell/overlays.rs	2026-11-28 10:34:10.132973386 +0700
++++ b/src/client/shell/overlays.rs	2026-11-28 10:35:38.315542637 +0700
+@@ -237,9 +237,9 @@
+     for x in a.x..a.right() {
+         b[(x, a.y)]
+             .set_symbol(if x == a.x {
+-                "┌"
++                "╭"
+             } else if x + 1 == a.right() {
+-                "┐"
++                "╮"
+             } else {
+                 "─"
+             })
+@@ -247,9 +247,9 @@
+         let y = a.bottom() - 1;
+         b[(x, y)]
+             .set_symbol(if x == a.x {
+-                "└"
++                "╰"
+             } else if x + 1 == a.right() {
+-                "┘"
++                "╯"
+             } else {
+                 "─"
+             })
+diff -u -r a/src/ui/panes.rs b/src/ui/panes.rs
+--- a/src/ui/panes.rs	2026-11-28 10:31:33.934516698 +0700
++++ b/src/ui/panes.rs	2026-11-28 10:33:13.168899446 +0700
+@@ -795,10 +795,10 @@
+         (false, false, true, true) | (false, false, true, false) | (false, false, false, true) => {
+             "─"
+         }
+-        (false, true, false, true) => "┌",
+-        (false, true, true, false) => "┐",
+-        (true, false, false, true) => "└",
+-        (true, false, true, false) => "┘",
++        (false, true, false, true) => "╭",
++        (false, true, true, false) => "╮",
++        (true, false, false, true) => "╰",
++        (true, false, true, false) => "╯",
+         _ => "",
+     }
+ }

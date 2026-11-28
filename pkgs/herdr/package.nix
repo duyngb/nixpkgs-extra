@@ -24,6 +24,10 @@ rustPlatform.buildRustPackage (f: {
 
   cargoHash = "sha256-a6DgQodo+qa5yg/d+yMfsM9EUv2LQRFrqZgmwgVxggE=";
 
+  patches = [
+    ./01-rounded-corners.patch
+  ];
+
   zigDeps = callPackage ("${f.src}/vendor/libghostty-vt/build.zig.zon.nix") {
     name = "herdr-libghostty-vt-zig-cache";
     inherit zstd;
