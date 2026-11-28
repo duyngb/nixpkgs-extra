@@ -1,6 +1,7 @@
 {
   callPackage,
   fetchFromGitHub,
+  installShellFiles,
   gitMinimal,
   lib,
   pkg-config,
@@ -38,6 +39,7 @@ rustPlatform.buildRustPackage (f: {
 
   nativeBuildInputs = [
     gitMinimal
+    installShellFiles
     pkg-config
   ];
 
@@ -51,6 +53,13 @@ rustPlatform.buildRustPackage (f: {
   preBuild = ''
     export ZIG_GLOBAL_CACHE_DIR="$TMPDIR/zig-global-cache"
     export ZIG_LOCAL_CACHE_DIR="$TMPDIR/zig-local-cache"
+  '';
+
+  postInstall = ''
+    installShellCompletion --cmd herdr \
+      --bash <( $out/bin/herdr completion bash ) \
+      --fish <( $out/bin/herdr completion fish ) \
+      --zsh  <( $out/bin/herdr completion zsh  ) \
   '';
 
   doCheck = false; # TODO: should we run unstream tests?
